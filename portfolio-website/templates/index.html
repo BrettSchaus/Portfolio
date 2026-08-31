@@ -5,13 +5,22 @@
 		<title>Portfolio Website</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/main.css') }}" />
+		<noscript><link rel="stylesheet" href="{{ url_for('static', filename='assets/css/noscript.css') }}" /></noscript>
 	</head>
 	<body class="is-preload">
 
 		<!-- Page Wrapper -->
 			<div id="page-wrapper">
+				{% with messages = get_flashed_messages(with_categories=true) %}
+					{% if messages %}
+						{% for category, message in messages %}
+							<div class="flash-message">
+								{{ message }}
+							</div>
+						{% endfor %}
+					{% endif %}
+				{% endwith %}
 
 				<!-- Header -->
 					<header id="header" class="alt">
@@ -26,10 +35,10 @@
 						<div class="inner">
 							<h2>Menu</h2>
 							<ul class="links">
-								<li><a href="index.html">Home</a></li>
-								<li><a href="education.html">Education</a></li>
-								<li><a href="work-experience.html">Work Experience</a></li>
-								<li><a href="projects.html">Projects</a></li>
+								<li><a href="{{ url_for('home') }}">Home</a></li>
+								<li><a href="{{ url_for('education') }}">Education</a></li>
+								<li><a href="{{ url_for('work_experience') }}">Work Experience</a></li>
+								<li><a href="{{ url_for('projects') }}">Projects</a></li>
 							</ul>
 							<a href="#" class="close">Close</a>
 						</div>
@@ -38,7 +47,9 @@
 				<!-- Banner -->
 					<section id="banner">
 						<div class="inner">
-							<div class="logo"><span class="icon fa-gem"></span></div>
+							<div class="logo">
+    							<img src="../static/images/CV%20Photo.png" alt="Brett Schaus">
+							</div>
 							<h2>Brett Schaus</h2>
 							<p>Mechatronic Engineer and Python Developer</p>
 						</div>
@@ -74,7 +85,7 @@
 						<!-- Three -->
 							<section id="three" class="wrapper spotlight style3">
 								<div class="inner">
-									<a href="#" class="image"><img src="images/pic03.jpg" alt="" /></a>
+									<a href="#" class="image"><img src="../static/images/pic03.jpg" alt="" /></a>
 									<div class="content">
 										<h2 class="major">Nullam dignissim</h2>
 										<p>Lorem ipsum dolor sit amet, etiam lorem adipiscing elit. Cras turpis ante, nullam sit amet turpis non, sollicitudin posuere urna. Mauris id tellus arcu. Nunc vehicula id nulla dignissim dapibus. Nullam ultrices, neque et faucibus viverra, ex nulla cursus.</p>
@@ -90,25 +101,25 @@
 									<p>Cras mattis ante fermentum, malesuada neque vitae, eleifend erat. Phasellus non pulvinar erat. Fusce tincidunt, nisl eget mattis egestas, purus ipsum consequat orci, sit amet lobortis lorem lacus in tellus. Sed ac elementum arcu. Quisque placerat auctor laoreet.</p>
 									<section class="features">
 										<article>
-											<a href="#" class="image"><img src="images/pic04.jpg" alt="" /></a>
+											<a href="#" class="image"><img src="../static/images/pic04.jpg" alt="" /></a>
 											<h3 class="major">Sed feugiat lorem</h3>
 											<p>Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
 											<a href="#" class="special">Learn more</a>
 										</article>
 										<article>
-											<a href="#" class="image"><img src="images/pic05.jpg" alt="" /></a>
+											<a href="#" class="image"><img src="../static/images/pic05.jpg" alt="" /></a>
 											<h3 class="major">Nisl placerat</h3>
 											<p>Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
 											<a href="#" class="special">Learn more</a>
 										</article>
 										<article>
-											<a href="#" class="image"><img src="images/pic06.jpg" alt="" /></a>
+											<a href="#" class="image"><img src="../static/images/pic06.jpg" alt="" /></a>
 											<h3 class="major">Ante fermentum</h3>
 											<p>Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
 											<a href="#" class="special">Learn more</a>
 										</article>
 										<article>
-											<a href="#" class="image"><img src="images/pic07.jpg" alt="" /></a>
+											<a href="#" class="image"><img src="../static/images/pic07.jpg" alt="" /></a>
 											<h3 class="major">Fusce consequat</h3>
 											<p>Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
 											<a href="#" class="special">Learn more</a>
@@ -126,8 +137,8 @@
 					<section id="footer">
 						<div class="inner">
 							<h2 class="major">Get in touch</h2>
-							<p>Cras mattis ante fermentum, malesuada neque vitae, eleifend erat. Phasellus non pulvinar erat. Fusce tincidunt, nisl eget mattis egestas, purus ipsum consequat orci, sit amet lobortis lorem lacus in tellus. Sed ac elementum arcu. Quisque placerat auctor laoreet.</p>
-							<form method="post" action="#">
+							<p></p>
+							<form method="post" action="/contact">
 								<div class="fields">
 									<div class="field">
 										<label for="name">Name</label>
@@ -148,18 +159,16 @@
 							</form>
 							<ul class="contact">
 								<li class="icon solid fa-home">
-									Untitled Inc<br />
-									1234 Somewhere Road Suite #2894<br />
-									Nashville, TN 00000-0000
+									Turin, Italy<br />
 								</li>
-								<li class="icon solid fa-phone">(000) 000-0000</li>
-								<li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
-								<li class="icon brands fa-twitter"><a href="#">twitter.com/untitled-tld</a></li>
-								<li class="icon brands fa-facebook-f"><a href="#">facebook.com/untitled-tld</a></li>
-								<li class="icon brands fa-instagram"><a href="#">instagram.com/untitled-tld</a></li>
+								<li class="icon solid fa-phone">+39 (351) 810-4114</li>
+								<li class="icon solid fa-envelope"><a href="mailto:brettschaus@gmail.com">brettschaus@gmail.com</a></li>
+								<li class="icon brands fa-linkedin-in"><a href="https://www.linkedin.com/in/brett-schaus-a71b38173/" target="_blank">
+            						Brett Schaus</a>
+    							</li>
 							</ul>
 							<ul class="copyright">
-								<li>&copy; Brett Schaus 2026</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Brett Schaus 2026</li>
 							</ul>
 						</div>
 					</section>
@@ -167,12 +176,12 @@
 			</div>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+		<script src="{{ url_for('static', filename='assets/js/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/jquery.scrollex.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/browser.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/breakpoints.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/util.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
 
 	</body>
 </html>

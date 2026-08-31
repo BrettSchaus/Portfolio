@@ -1,4 +1,4 @@
-@import url(fontawesome-all.min.css);
+@import url(assets/css/fontawesome-all.min.css);
 @import url("https://fonts.googleapis.com/css?family=Raleway:200,700|Source+Sans+Pro:300,600,300italic,600italic");
 
 
@@ -65,6 +65,23 @@ input, select, textarea {
 	-webkit-appearance: none;
 	-ms-appearance: none;
 	appearance: none;
+}
+
+#banner .logo img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+	object-position: center 10%;
+    border-radius: 50%;
+}
+
+.flash-message {
+    padding: 1em;
+    margin-bottom: 2em;
+    border-radius: 5px;
+    background: #4caf50;
+    color: white;
+    text-align: center;
 }
 
 /* Basic */
@@ -3291,7 +3308,7 @@ input, select, textarea {
 		}
 
 		#menu .close {
-			background-image: url("images/close.svg");
+			background-image: url("assets/css/images/close.svg");
 			background-position: 75% 25%;
 			background-repeat: no-repeat;
 			background-size: 2em 2em;
