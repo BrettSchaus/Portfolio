@@ -1,138 +1,596 @@
 <!DOCTYPE HTML>
 
 <html>
-	<head>
-		<title>Education</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="../static/assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="../static/assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
+<head>
+    <title>Education</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-		<!-- Page Wrapper -->
-			<div id="page-wrapper">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='assets/css/main.css') }}" />
 
-				<!-- Header -->
-					<header id="header">
-						<h1><a href="/">Home</a></h1>
-						<nav>
-							<a href="#menu">Menu</a>
-						</nav>
-					</header>
+    <noscript>
+        <link rel="stylesheet"
+              href="{{ url_for('static', filename='assets/css/noscript.css') }}" />
+    </noscript>
+</head>
 
-				<!-- Menu -->
-					<nav id="menu">
-						<div class="inner">
-							<h2>Menu</h2>
-							<ul class="links">
-								<li><a href="index.html">Home</a></li>
-								<li><a href="/education">Education</a></li>
-								<li><a href="work-experience.html">Work Experience</a></li>
-								<li><a href="/projects">Projects</a></li>
-							</ul>
-							<a href="#" class="close">Close</a>
-						</div>
-					</nav>
+<body class="is-preload">
+    <!-- Page Wrapper -->
+    <div id="page-wrapper">
+        <!-- Header -->
+        <header id="header">
+            <h1>
+                <a href="{{ url_for('home') }}">Home</a>
+            </h1>
+            <nav>
+                <a href="#menu">Menu</a>
+            </nav>
+        </header>
 
-				<!-- Wrapper -->
-					<section id="wrapper">
-						<header>
-							<div class="inner">
-								<h2>Master's Degree in Mechatronics</h2>
-								<p>At Politecnico di Torino</p>
-							</div>
-						</header>
+        <!-- Menu -->
+        <nav id="menu">
+            <div class="inner">
+                <h2>Menu</h2>
+                <ul class="links">
+					<li><a href="{{ url_for('home') }}">Home</a></li>
+					<li><a href="{{ url_for('education') }}">Education</a></li>
+					<li><a href="{{ url_for('work_experience') }}">Work Experience</a></li>
+					<li><a href="{{ url_for('projects') }}">Projects</a></li>
+				</ul>
 
-						<!-- Content -->
-							<div class="wrapper">
-								<div class="inner">
+                <a href="#" class="close">Close</a>
 
-									<h3 class="major">Master's Degree - Mechatronics Engineer</h3>
-									<p>
-										Focused on advanced and intelligent control systems, including
-										automatic control, electronics, robotics, automation and planning
-										control systems, electrical technologies for electric mobility, and
-										network technologies.
-									</p>
+            </div>
 
-									<h3 class="major">Bachelor's Degree - Mechanical Engineer</h3>
-									<p>
-										The main courses included applied mechanics, technical drawing,
-										strength of materials, fluid mechanics, fundamentals of machine
-										design, manufacturing processes, experimental statistics, and
-										mechanical measurement.
-									</p>
+        </nav>
 
-									<section class="features">
-										<article>
-											<a href="https://www.polito.it/didattica/corsi-di-laurea/ingegneria-meccanica/piano-di-studi" class="image"><img src="https://iimtu.edu.in/blog/wp-content/uploads/2023/12/ME-111.jpg" alt="mechanical engineering" /></a>
-											<h3 class="major">Mechanical Engineering</h3>
-											<p>Study plan at Politenico di Torino for a Bachelor's degree in Mechanical Engineering.</p>
-											<a href="https://www.polito.it/didattica/corsi-di-laurea/ingegneria-meccanica/piano-di-studi" class="special">Learn more</a>
-										</article>
-										<article>
-											<a href="https://www.polito.it/didattica/corsi-di-laurea-magistrale/mechatronic-engineering" class="image"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAuaLkkVCSNWUoL1mn3C7qrq9CfytxQ2doGUcnAIiBksEhZrZheuPG4RI&s=10" alt="mechatronic engineering" /></a>
-											<h3 class="major">Mechatronic Engineering</h3>
-											<p>Study plan at Politenico di Torino for a Master's degree in Mechatronic Engineering.</p>
-											<a href="https://www.polito.it/didattica/corsi-di-laurea-magistrale/mechatronic-engineering" class="special">Learn more</a>
-										</article>
-									</section>
 
-								</div>
-							</div>
+        <!-- Education -->
+        <section id="wrapper">
+            <!-- Education Header -->
+            <header>
+                <div class="inner">
+                    <h2>Education</h2>
+                    <p>
+                        Bachelor's and Master's Degrees at
+                        Politecnico di Torino.
+                    </p>
+                </div>
+            </header>
 
-					</section>
+            <!-- Content -->
+            <div class="wrapper">
+                <div class="inner">
 
-				<!-- Footer -->
-					<section id="footer">
-						<div class="inner">
-							<h2 class="major">Get in touch</h2>
-							<p></p>
-							<form method="post" action="#">
-								<div class="fields">
-									<div class="field">
-										<label for="name">Name</label>
-										<input type="text" name="name" id="name" />
-									</div>
-									<div class="field">
-										<label for="email">Email</label>
-										<input type="email" name="email" id="email" />
-									</div>
-									<div class="field">
-										<label for="message">Message</label>
-										<textarea name="message" id="message" rows="4"></textarea>
-									</div>
-								</div>
-								<ul class="actions">
-									<li><input type="submit" value="Send Message" /></li>
-								</ul>
-							</form>
-							<ul class="contact">
-								<li class="icon solid fa-home">
-									Turin, Italy<br />
-								</li>
-								<li class="icon solid fa-phone">+39 (351) 810-4114</li>
-								<li class="icon solid fa-envelope"><a href="#">brettschaus@gmail.com</a></li>
-								<li class="icon brands fa-linkedin-in"><a href="https://www.linkedin.com/in/brett-schaus-a71b38173/" target="_blank">
-            						Brett Schaus</a>
-    							</li>
-							</ul>
-							<ul class="copyright">
-								<li>&copy; Brett Schaus 2026</li>
-							</ul>
-						</div>
-					</section>
+                    <!-- MASTER'S DEGREE -->
 
-			</div>
+                    <h2 class="major">
+                        Master's Degree in Mechatronic Engineering
+                    </h2>
+                    <p>
+                        <strong>Politecnico di Torino — Turin, Italy</strong>
+                    </p>
+                    <p>
+                        Specialized in mechatronic engineering with a focus on
+                        automatic control, robotics, electronics, automation,
+                        embedded systems, and electric mobility technologies.
+                    </p>
 
-		<!-- Scripts -->
-			<script src="../static/assets/js/jquery.min.js"></script>
-			<script src="../static/assets/js/jquery.scrollex.min.js"></script>
-			<script src="../static/assets/js/browser.min.js"></script>
-			<script src="../static/assets/js/breakpoints.min.js"></script>
-			<script src="../static/assets/js/util.js"></script>
-			<script src="../static/assets/js/main.js"></script>
+                    <!-- Master's First Year -->
+                    <h3 class="major">First Year</h3>
+                    <section class="features">
+                        <article>
+                            <h3 class="major">
+                                Digital Control Technologies and Architectures
+                            </h3>
+                            <p>
+                                Studied digital control systems and the design
+                                of discrete-time controllers for mechatronic
+                                applications, including modelling, simulation,
+                                and implementation using MATLAB and Simulink.
+                            </p>
+                        </article>
 
-	</body>
+                        <article>
+                            <h3 class="major">
+                                Modelling and Simulation of Mechatronic Systems
+                            </h3>
+                            <p>
+                                Developed mathematical models and simulations
+                                of dynamic mechatronic systems, with
+                                applications to mechanical, electrical,
+                                and automotive systems.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Electronic Systems for Mechatronics
+                            </h3>
+                            <p>
+                                Studied electronic systems used in mechatronic
+                                applications, including analog and digital
+                                electronics, signal acquisition, processing,
+                                and embedded electronic architectures.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Estimation, Filtering and System Identification
+                            </h3>
+                            <p>
+                                Studied techniques for identifying dynamic
+                                system models from experimental data, together
+                                with estimation and filtering methods for
+                                systems affected by noise and uncertainty.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Automatic Control
+                            </h3>
+                            <p>
+                                The course will address the fundamentals of dynamical systems analysis
+								and of the design of simple feedback controllers.
+                            </p>
+
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Model-Based Software Design
+                            </h3>
+                            <p>
+                                Studied model-based approaches for embedded
+                                software development, including system
+                                modelling, simulation, validation, and
+                                automotive functional safety concepts.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Robotics
+                            </h3>
+                            <p>
+                                Studied robotic systems with emphasis on robot
+                                kinematics, dynamics, trajectory generation,
+                                and control of industrial and mobile robots.
+                            </p>
+                        </article>
+                    </section>
+
+                    <!-- Technologies for eMobility -->
+                    <h3 class="major">
+                        Technologies for eMobility
+                    </h3>
+                    <p>
+                        Specialized coursework focused on electric mobility,
+                        electric powertrains, electrical machines, power
+                        electronics, vehicle control, and connected vehicle
+                        technologies.
+                    </p>
+                    <section class="features">
+
+                        <article>
+                            <h3 class="major">
+                                Electrical Technologies for eMobility
+                            </h3>
+                            <p>
+                                Studied the main components of electric
+                                traction systems, including batteries,
+                                power electronic converters, and electrical
+                                machines, with emphasis on their integration
+                                into electric powertrains.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Automotive Control Systems
+                            </h3>
+                            <p>
+                                Studied modelling and control of automotive
+                                systems, including vehicle dynamics, chassis
+                                systems, engines, and drivetrains. Applied
+                                control techniques through simulation and
+                                performance analysis.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Electric Motor Drives for ePowertrains
+                            </h3>
+                            <p>
+                                Studied electric motor drives for electric
+                                and hybrid vehicles, including AC motor
+                                modelling, power electronics, torque control,
+                                motor identification, efficiency optimization,
+                                and digital control algorithms.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Networking Technologies for Connected Vehicles
+                            </h3>
+                            <p>
+                                Studied communication and networking
+                                technologies used in connected vehicles,
+                                including vehicle networks, vehicle-to-vehicle
+                                and vehicle-to-infrastructure communication,
+                                as well as vehicle localization systems.
+                            </p>
+                        </article>
+                    </section>
+
+
+                    <!-- Master's Thesis -->
+                    <h3 class="major">Master's Thesis</h3>
+
+                    <section class="features">
+                        <article>
+                            <h3 class="major">
+                                Master's Thesis
+                            </h3>
+							<h3>
+                            	<a href="{{ url_for('projects') }}">Projects</a>
+							</h3>
+                        </article>
+                    </section>
+
+
+                    <!-- BACHELOR'S DEGREE -->
+                    <h2 class="major">
+                        Bachelor's Degree in Mechanical Engineering
+                    </h2>
+                    <p>
+                        <strong>Politecnico di Torino — Turin, Italy</strong>
+                    </p>
+                    <p>
+                        The degree provided a broad foundation in mechanical
+                        engineering, including mechanics, materials,
+                        thermodynamics, fluid mechanics, machine design,
+                        manufacturing, electrical engineering, and industrial
+                        systems.
+                    </p>
+
+
+                    <!-- First Year -->
+                    <h3 class="major">First Year</h3>
+                    <section class="features">
+                        <article>
+                            <h3 class="major">Chemistry</h3>
+                            <p>
+                                Provides the fundamental chemistry needed by
+                                an engineer, covering atomic structure,
+                                periodicity, chemical bonding, stoichiometry,
+                                gases and solutions, chemical equilibrium,
+                                thermodynamics, electrochemistry, and basic
+                                organic chemistry.
+                            </p>
+                        </article>
+                        <article>
+                            <h3 class="major">Computer Sciences</h3>
+                            <p>
+                                Introduces students to the cultural and
+                                technological foundations of computer science
+                                and teaches programming as a tool for solving
+                                realistic engineering problems.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Mathematical Analysis I
+                            </h3>
+                            <p>
+                                Establishes the mathematical foundations
+                                needed for engineering, including logical
+                                reasoning, differential and integral calculus
+                                for functions of one variable, and applications
+                                to ordinary differential equations.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Engineering Drawing
+                            </h3>
+                            <p>
+                                Teaches the formal representation of mechanical
+                                components through technical drawings,
+                                including shape, dimensions, manufacturing
+                                information, dimensional and geometrical
+                                tolerances.
+                            </p>
+                        </article>
+
+                        <article>
+
+                            <h3 class="major">
+                                Linear Algebra and Geometry
+                            </h3>
+                            <p>
+                                Covers the mathematical tools of linear
+                                algebra and geometry required in engineering,
+                                including vector spaces, matrices, linear
+                                systems, transformations, and geometric
+                                concepts.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">Physics I</h3>
+                            <p>
+                                Provides the fundamental scientific basis for
+                                engineering physics, with emphasis on
+                                mechanics, thermodynamics, and fundamental
+                                physical laws.
+                            </p>
+                        </article>
+
+                    </section>
+
+
+                    <!-- Second Year -->
+                    <h3 class="major">Second Year</h3>
+                    <section class="features">
+                        <article>
+                            <h3 class="major">
+                                Fundamentals of Strength of Materials
+                            </h3>
+                            <p>
+                                Introduces the mechanical behaviour and
+                                strength of materials and structural elements,
+                                including stresses, strains, axial loading,
+                                bending, torsion, shear, buckling, and fatigue.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Mathematical Analysis II
+                            </h3>
+                            <p>
+                                Extends mathematical analysis to more advanced
+                                engineering applications, including sequences
+                                and series, Fourier series, Laplace transforms,
+                                functions of several variables, and multiple
+                                integrals.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">Physics II</h3>
+                            <p>
+                                Develops further physical principles relevant
+                                to engineering, building on Physics I and
+                                introducing topics such as electromagnetism
+                                and other areas of modern physics.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Science and Technology of Materials
+                            </h3>
+                            <p>
+                                Examines the relationship between material
+                                structure, properties, processing, and
+                                performance. Covers metals, polymers,
+                                ceramics, glasses, composites, defects,
+                                deformation, phase diagrams, strengthening,
+                                and corrosion.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">Applied Mechanics</h3>
+                            <p>
+                                Applies mechanics to real mechanical systems
+                                and power transmission. Topics include
+                                rigid-body mechanics, gears, belt drives,
+                                shafts, joints, screws, clutches, brakes,
+                                bearings, dynamics, and vibrations.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Fundamentals of Engineering Thermodynamics
+                                and Heat Transfer
+                            </h3>
+                            <p>
+                                Develops the ability to analyse engineering
+                                systems using thermodynamics and heat-transfer
+                                principles, including the first and second
+                                laws of thermodynamics, energy transfers,
+                                efficiency, and heat transfer.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Methodologies for Inspection and Quality Control
+                            </h3>
+                            <p>
+                                Introduces engineering methods used to inspect
+                                manufactured components and evaluate their
+                                quality, providing an overview of inspection
+                                and quality-control techniques used in industry.
+                            </p>
+                        </article>
+                    </section>
+
+                    <!-- Third Year -->
+                    <h3 class="major">Third Year</h3>
+                    <section class="features">
+                        <article>
+                            <h3 class="major">Fluid Mechanics</h3>
+                            <p>
+                                Introduces the principles required to analyse
+                                fluids at rest and in motion, including fluid
+                                properties, pressure, conservation laws, and
+                                fluid flow in engineering systems.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Fundamentals of Machine Design
+                            </h3>
+                            <p>
+                                Introduces the principles used to design
+                                mechanical components and machines, connecting
+                                loads, stresses, material properties,
+                                component geometry, and safety requirements
+                                to mechanical design.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Introduction to Electrical Engineering /
+                                Electrical Machines
+                            </h3>
+                            <p>
+                                Provides the fundamentals of electrical
+                                engineering, including DC and AC circuits,
+                                electrical components, circuit analysis,
+                                electrical power systems, and the principles
+                                and applications of electrical machines.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Fundamentals of Fluid Machinery
+                            </h3>
+                            <p>
+                                Covers thermal and hydraulic machines and the
+                                fundamentals of fluid-power systems, including
+                                operating principles, thermodynamic and
+                                fluid-dynamic behaviour, performance,
+                                off-design operation, and hydraulic and
+                                pneumatic systems.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Industrial Plants and Safety
+                            </h3>
+                            <p>
+                                Introduces the design and management of
+                                industrial plants, including factory layout,
+                                plant configuration, and cost management.
+                                Also covers workplace safety, regulations,
+                                and industrial risk management.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">
+                                Manufacturing Processes
+                            </h3>
+                            <p>
+                                Covers the principal manufacturing processes
+                                used to transform materials into engineering
+                                components, including manufacturing
+                                technologies, process selection, process
+                                capabilities, product design, and quality.
+                            </p>
+                        </article>
+
+                        <article>
+                            <h3 class="major">Final Project</h3>
+                            <h3>
+                                <a href="{{ url_for('projects') }}">Projects</a>
+                            </h3>
+                        </article>
+                    </section>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <section id="footer">
+            <div class="inner">
+                <h2 class="major">Get in touch</h2>
+                <form method="post"
+                      action="{{ url_for('contact') }}">
+                    <div class="fields">
+                        <div class="field">
+                            <label for="name">Name</label>
+                            <input type="text"
+                                   name="name"
+                                   id="name"
+                                   required />
+                        </div>
+                        <div class="field">
+                            <label for="email">Email</label>
+                            <input type="email"
+                                   name="email"
+                                   id="email"
+                                   required />
+                        </div>
+                        <div class="field">
+                            <label for="message">Message</label>
+                            <textarea name="message"
+                                      id="message"
+                                      rows="4"
+                                      required></textarea>
+                        </div>
+                    </div>
+                    <ul class="actions">
+                        <li>
+                            <input type="submit"
+                                   value="Send Message" />
+                        </li>
+                    </ul>
+                </form>
+
+                <ul class="contact">
+                    <li class="icon solid fa-home">
+                        Turin, Italy
+                    </li>
+                    <li class="icon solid fa-phone">
+                        +39 (351) 810-4114
+                    </li>
+
+                    <li class="icon solid fa-envelope">
+                        <a href="mailto:brettschaus@gmail.com">
+                            brettschaus@gmail.com
+                        </a>
+                    </li>
+
+                    <li class="icon brands fa-linkedin-in">
+                        <a href="https://www.linkedin.com/in/brett-schaus-a71b38173/"
+                           target="_blank">
+                            Brett Schaus
+                        </a>
+                    </li>
+                </ul>
+                <ul class="copyright">
+                    <li>&copy; Brett Schaus 2026</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- Scripts -->
+		<script src="{{ url_for('static', filename='assets/js/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/jquery.scrollex.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/browser.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/breakpoints.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/util.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
+
+</body>
 </html>

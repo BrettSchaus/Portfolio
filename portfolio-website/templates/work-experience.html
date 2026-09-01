@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>Elements - Solid State by HTML5 UP</title>
+		<title>Work Experience</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../static/assets/css/main.css" />
@@ -15,7 +15,7 @@
 
 				<!-- Header -->
 					<header id="header">
-						<h1><a href="index.html">Solid State</a></h1>
+						<h1><a href="index.html">Home</a></h1>
 						<nav>
 							<a href="#menu">Menu</a>
 						</nav>
@@ -26,10 +26,10 @@
 						<div class="inner">
 							<h2>Menu</h2>
 							<ul class="links">
-								<li><a href="index.html">Home</a></li>
-								<li><a href="/education">Education</a></li>
-								<li><a href="work-experience.html">Work Experience</a></li>
-								<li><a href="/projects">Projects</a></li>
+								<li><a href="{{ url_for('home') }}">Home</a></li>
+								<li><a href="{{ url_for('education') }}">Education</a></li>
+								<li><a href="{{ url_for('work_experience') }}">Work Experience</a></li>
+								<li><a href="{{ url_for('projects') }}">Projects</a></li>
 							</ul>
 							<a href="#" class="close">Close</a>
 						</div>
@@ -399,12 +399,12 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 			</div>
 
 		<!-- Scripts -->
-			<script src="../static/assets/js/jquery.min.js"></script>
-			<script src="../static/assets/js/jquery.scrollex.min.js"></script>
-			<script src="../static/assets/js/browser.min.js"></script>
-			<script src="../static/assets/js/breakpoints.min.js"></script>
-			<script src="../static/assets/js/util.js"></script>
-			<script src="../static/assets/js/main.js"></script>
+		<script src="{{ url_for('static', filename='assets/js/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/jquery.scrollex.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/browser.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/breakpoints.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/util.js') }}"></script>
+		<script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
 
 	</body>
 </html>
