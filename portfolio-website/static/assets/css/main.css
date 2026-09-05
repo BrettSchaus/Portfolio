@@ -4166,3 +4166,7 @@ input, select, textarea {
 		}
 
 	}
+
+.features .full-width {
+    width: 100%;
+}
