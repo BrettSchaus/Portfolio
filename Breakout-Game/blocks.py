@@ -12,6 +12,3 @@ class Block(Turtle):
         self.color("white")
         self.shapesize(1, 5)
         self.goto(x=position[0], y=position[1])
-
-    def create_block(self):
-        pass

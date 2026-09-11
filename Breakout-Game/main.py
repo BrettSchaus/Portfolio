@@ -4,6 +4,9 @@ from ball import Ball
 from blocks import Block
 from scoreboard import Scoreboard
 import time
+import random
+
+colours = ['red', 'green', 'yellow']
 
 
 screen = Screen()
@@ -13,9 +16,14 @@ screen.title("Breakout")
 screen.tracer(0)
 
 paddle = Paddle((0,-350))
-for i in range(8):
-    for j in range (5):
-        blocks = Block((-360 + i * 105, 180 + j * 40))
+for j in range (6):
+    if j % 2 == 0:
+        colour = colours[j // 2]
+
+    for i in range (8):
+        blocks = Block((-370 + i * 105, 150 + j * 40))
+        blocks.color(colour)
+
 ball = Ball()
 scoreboard = Scoreboard()
 
