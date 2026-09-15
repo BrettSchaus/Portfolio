@@ -1,0 +1,70 @@
+@import 'assets/sass/libs/vars';
+@import 'assets/sass/libs/functions';
+@import 'assets/sass/libs/mixins';
+@import 'assets/sass/libs/vendor';
+@import 'assets/sass/libs/breakpoints';
+@import 'assets/sass/libs/html-grid';
+@import 'fontawesome-all.min.css';
+@import 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400';
+
+/*
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+*/
+
+// Breakpoints.
+
+	@include breakpoints((
+		xlarge:   ( 1281px,  1680px ),
+		large:    ( 981px,   1280px ),
+		medium:   ( 737px,   980px  ),
+		small:    ( 481px,   736px  ),
+		xsmall:   ( 361px,   480px  ),
+		xxsmall:  ( null,    360px  )
+	));
+
+// Mixins.
+
+	@mixin color($p) {
+		@include color-typography($p);
+		@include color-box($p);
+		@include color-button($p);
+		@include color-form($p);
+		@include color-icon($p);
+		@include color-list($p);
+		@include color-section($p);
+		@include color-table($p);
+		@include color-spotlight($p);
+	}
+
+// Base.
+
+	@import 'assets/sass/base/reset';
+	@import 'assets/sass/base/page';
+	@import 'assets/sass/base/typography';
+
+// Component.
+
+	@import 'assets/sass/components/row';
+	@import 'assets/sass/components/box';
+	@import 'assets/sass/components/button';
+	@import 'assets/sass/components/form';
+	@import 'assets/sass/components/icon';
+	@import 'assets/sass/components/image';
+	@import 'assets/sass/components/list';
+	@import 'assets/sass/components/actions';
+	@import 'assets/sass/components/icons';
+	@import 'assets/sass/components/section';
+	@import 'assets/sass/components/table';
+	@import 'assets/sass/components/features';
+	@import 'assets/sass/components/statistics';
+	@import 'assets/sass/components/spotlight';
+
+// Layout.
+
+	@import 'assets/sass/layout/header';
+	@import 'assets/sass/layout/nav';
+	@import 'assets/sass/layout/main';
+	@import 'assets/sass/layout/footer';
+	@import 'assets/sass/layout/wrapper';
