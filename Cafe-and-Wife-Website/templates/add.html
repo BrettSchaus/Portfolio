@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Cafe</title>
+</head>
+<body>
+
+<h1>Add a Cafe</h1>
+
+<form method="POST">
+
+    {{ form.hidden_tag() }}
+
+    {{ form.cafe.label }}
+    {{ form.cafe() }}
+    <br><br>
+
+    {{ form.location.label }}
+    {{ form.location() }}
+    <br><br>
+
+    {{ form.open.label }}
+    {{ form.open() }}
+    <br><br>
+
+    {{ form.close.label }}
+    {{ form.close() }}
+    <br><br>
+
+    {{ form.coffee_rating.label }}
+    {{ form.coffee_rating() }}
+    <br><br>
+
+    {{ form.wifi_rating.label }}
+    {{ form.wifi_rating() }}
+    <br><br>
+
+    {{ form.power_rating.label }}
+    {{ form.power_rating() }}
+    <br><br>
+
+    {{ form.submit() }}
+
+</form>
+
+</body>
+</html>
