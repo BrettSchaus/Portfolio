@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Colour Extractor</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="static/assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="static/assets/css/noscript.css" /></noscript>
+	</head>
+
+
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="fade-in">
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Featured Post -->
+							<article class="post featured">
+								<header class="major">
+									<h2>Colour Extractor</h2>
+									<p>Upload an image to discover its 10 most dominant colours.</p>
+								</header>
+
+								<form method="POST" enctype="multipart/form-data">
+									<input type="file" name="image" id="imageInput">
+
+									<br><br>
+
+									<img id="preview"
+										 src="#"
+										 alt="Image preview"
+										 style="max-width: 1000px; max-height: 1500px; display: none;">
+
+									<br><br>
+
+									<input type="submit" value="Analyse Colours">
+								</form>
+							
+								
+								{% if colours %}
+									<img src="{{ url_for('static', filename='uploaded.jpg') }}"
+										 alt="Uploaded image"
+										 style="max-width: 1000px; max-height: 1500px;>
+									
+									{% for colour in colours %}
+										<div class="colour-swatch"
+											 style="background-color: {{ colour.hex }}; color: {{ colour.text_colour }};">
+											{{ colour.hex }} - {{ "%.1f"|format(colour.percentage) }}%
+										</div>
+									{% endfor %}
+								{% endif %}
+
+							</article>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+							<section>
+
+								<ul class="icons alt">
+									<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+							</section>
+						
+					</footer>
+
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="static/assets/js/jquery.min.js"></script>
+			<script src="static/assets/js/jquery.scrollex.min.js"></script>
+			<script src="static/assets/js/jquery.scrolly.min.js"></script>
+			<script src="static/assets/js/browser.min.js"></script>
+			<script src="static/assets/js/breakpoints.min.js"></script>
+			<script src="static/assets/js/util.js"></script>
+			<script src="static/assets/js/main.js"></script>
+			<script>
+				const imageInput = document.getElementById("imageInput");
+				const preview = document.getElementById("preview");
+
+				imageInput.addEventListener("change", function () {
+					const file = this.files[0];
+
+					if (file) {
+						preview.src = URL.createObjectURL(file);
+						preview.style.display = "block";
+					}
+				});
+			</script>
+	</body>
+</html>
