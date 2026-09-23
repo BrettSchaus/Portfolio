@@ -2,11 +2,12 @@
 name = "fan-noise"
 version = "1.0.0"
 description = "Fan Noise App"
+dependencies = [
+    "flet==1.0.1",
+    "flet-audio==1.0.1",
+]
 
 [tool.flet]
 product = "Fan Noise"
 org = "com.brettschaus"
 desktop_flavor = "full"
-
-[tool.flet.android]
-icon = "assets/fanIcon.png"
