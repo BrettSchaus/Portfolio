@@ -1,0 +1,26 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Flet build output
+build/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# IDE files
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local Python tooling
+.pytest_cache/
+.mypy_cache/
+
+# Flet / Flutter generated files
+.flet/

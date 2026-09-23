@@ -1,0 +1,12 @@
+[project]
+name = "fan-noise"
+version = "1.0.0"
+description = "Fan Noise App"
+
+[tool.flet]
+product = "Fan Noise"
+org = "com.brettschaus"
+desktop_flavor = "full"
+
+[tool.flet.android]
+icon = "assets/fanIcon.png"
