@@ -6,3 +6,5 @@ __pycache__/
 .idea/
 .DS_Store
 build/
+# Generated scraper data
+Custom Web Scraper/Custom_Web_Scraper_data.csv
