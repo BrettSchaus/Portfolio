@@ -55,7 +55,16 @@ def main(page: ft.Page):
     # DatePicker
     def handle_change(e: ft.Event[ft.DatePicker]):
         nonlocal selected_date
-        selected_date = e.control.value
+
+        value = e.control.value
+
+        # Convert the DatePicker value to local time before getting the date
+        local_value = value.astimezone()
+
+        selected_date = local_value.date()
+
+        print("Raw DatePicker value:", value)
+        print("Local DatePicker value:", local_value)
         print("Selected date:", selected_date)
 
     def handle_time_change(e):
@@ -82,7 +91,6 @@ def main(page: ft.Page):
         on_dismiss=handle_dismissal,
     )
 
-
     ## Todo Functions
     # Display todos
     def show_todos():
@@ -90,10 +98,14 @@ def main(page: ft.Page):
 
         for index, todo in enumerate(todos):
             checkbox = ft.Checkbox(
-                label=todo["text"],
                 value=todo["completed"],
                 data=index,
                 on_change=toggle_todo
+            )
+
+            todo_text = ft.Text(
+                todo["text"],
+                expand=True,
             )
 
             delete_button = ft.IconButton(
@@ -105,8 +117,13 @@ def main(page: ft.Page):
             row = ft.Row(
                 controls=[
                     checkbox,
-                    delete_button
-                ]
+                    ft.Container(
+                        content=todo_text,
+                        expand=True,
+                    ),
+                    delete_button,
+                ],
+                width=float("inf"),
             )
 
             todo_list.controls.append(row)
@@ -243,7 +260,6 @@ def main(page: ft.Page):
 
         page.show_dialog(modal_dialog)
 
-
     # Display counters
     def show_counters():
         counter_list.controls.clear()
@@ -255,17 +271,29 @@ def main(page: ft.Page):
 
             date_text = start_date.strftime("%d/%m/%Y at %H:%M")
 
-            now = datetime.datetime.now(start_date.tzinfo)
+            # Get current local time
+            now = datetime.datetime.now()
+
             elapsed = now - start_date
 
-            years = elapsed.days // 365
-            days = elapsed.days % 365
-            hours, remainder = divmod(elapsed.seconds, 3600)
-            minutes, seconds = divmod(remainder, 60)
+            total_seconds = int(elapsed.total_seconds())
+
+            years = total_seconds // (365 * 24 * 60 * 60)
+            remaining = total_seconds % (365 * 24 * 60 * 60)
+
+            days = remaining // (24 * 60 * 60)
+            remaining %= (24 * 60 * 60)
+
+            hours = remaining // (60 * 60)
+            remaining %= (60 * 60)
+
+            minutes = remaining // 60
 
             counter_text = ft.Text(
                 f"{counter['text']} - Started: {date_text} - "
-                f"Time since: {years} years, {days} days, {hours} hours, {minutes} minutes"
+                f"Time since: {years} years, {days} days, "
+                f"{hours} hours, {minutes} minutes",
+                expand=True,
             )
 
             delete_button = ft.IconButton(
@@ -275,11 +303,15 @@ def main(page: ft.Page):
             )
             row = ft.Row(
                 controls=[
-                    counter_text,
-                    delete_button
-                ]
+                    ft.Container(
+                        content=counter_text,
+                        expand=True,
+                    ),
+                    delete_button,
+                ],
             )
             counter_list.controls.append(row)
+
         page.update()
 
     async def update_counters():
