@@ -6,9 +6,78 @@ import asyncio
 
 TODO_FILE = "todos.json"
 COUNTER_FILE = "counters.json"
+BOOKS_FILE = "books.json"
 
+os.environ["FLET_WS_MAX_MESSAGE_SIZE"] = "8000000"  # For tab 5 grid view
+
+# For search bar tab 4
+colors = [
+    "Amber",
+    "Blue Grey",
+    "Brown",
+    "Deep Orange",
+    "Green",
+    "Light Blue",
+    "Orange",
+    "Red",
+]
 
 def main(page: ft.Page):
+    ### Test for tab 5 - grid view
+    r = ft.Row(wrap=True, scroll="always", expand=True)
+
+    for i in range(100):
+        r.controls.append(
+            ft.Container(
+                content=ft.Text(f"Item {i}"),
+                width=100,
+                height=100,
+                alignment=ft.Alignment.CENTER,
+                bgcolor=ft.Colors.AMBER_100,
+                border=ft.Border.all(1, ft.Colors.AMBER_400),
+                border_radius=ft.BorderRadius.all(5),
+            )
+        )
+
+    ### Test for search bar in tab 4
+    def build_tiles(items: list[str]) -> list[ft.Control]:
+        return [
+            ft.ListTile(
+                title=ft.Text(item),
+                data=item,
+                on_click=handle_tile_click,
+            )
+            for item in items
+        ]
+
+    async def handle_tile_click(e: ft.Event[ft.ListTile]):
+        await anchor.close_view()
+
+    async def handle_change_search(e: ft.Event[ft.SearchBar]):
+        query = e.control.value.strip().lower()
+        matching = (
+            [color for color in colors if query in color.lower()] if query else colors
+        )
+        anchor.controls = build_tiles(matching)
+
+    def handle_submit(e: ft.Event[ft.SearchBar]):
+        print(f"Submit: {e.data}")
+
+    async def handle_tap(e: ft.Event[ft.SearchBar]):
+        await anchor.open_view()
+
+    anchor = ft.SearchBar(
+        view_elevation=4,
+        divider_color=ft.Colors.AMBER,
+        bar_hint_text="Search colors...",
+        view_hint_text="Choose a color from the suggestions...",
+        on_change=handle_change_search,
+        on_submit=handle_submit,
+        on_tap=handle_tap,
+        controls=build_tiles(colors),
+    )
+
+    ### Begin without search bar
     today = datetime.datetime.now()
 
     todos = []
@@ -39,13 +108,32 @@ def main(page: ft.Page):
         with open(COUNTER_FILE, "w") as file:
             json.dump(counters, file)
 
+    books = []
+    saved_date = None
+
+    # Load saved books
+    if os.path.exists(BOOKS_FILE):
+        with open(BOOKS_FILE, "r") as file:
+            books = json.load(file)
+
+    # Save counters
+    def save_books():
+        with open(BOOKS_FILE, "w") as file:
+            json.dump(books, file)
+
     # Todo Input
     todo_input = ft.TextField(
         label="What do you need to do?",
         expand=True,
         on_submit=lambda e: add_todo(e)
-        )
+    )
 
+    # Book Input
+    book_input = ft.TextField(
+        label="Which book have you finished reading?",
+        expand=True,
+        on_submit=lambda e: add_book(e)
+    )
     # Counter Input
     counter_input = ft.TextField(
         label="Create a counter",
@@ -91,10 +179,89 @@ def main(page: ft.Page):
         on_dismiss=handle_dismissal,
     )
 
+    ## Book Functions
+    # Display books
+    def show_books():
+        book_list.controls.clear()
+
+        for index, book in enumerate(books):
+            start_date = datetime.datetime.fromisoformat(
+                book["finished_date"]
+            )
+
+            date_text = start_date.strftime("%d/%m/%Y")
+
+            book_text = ft.Text(
+                f"{book['text']} - Finished: {date_text} ",
+                expand=True,
+            )
+
+            delete_button = ft.IconButton(
+                icon=ft.Icons.DELETE,
+                data=index,
+                on_click=delete_book
+            )
+            row = ft.Row(
+                controls=[
+                    ft.Container(
+                        content=book_text,
+                        expand=True,
+                    ),
+                    delete_button,
+                ],
+            )
+            book_list.controls.append(row)
+
+        page.update()
+
+    async def update_books():
+        while True:
+            show_books()
+            await asyncio.sleep(1)
+
+    # Add a book
+    def add_book(e):
+        if book_input.value.strip() == "":
+            return
+
+        books.append({
+            "text": book_input.value,
+            "finished_date": datetime.datetime.now().date().isoformat()
+        })
+        book_input.value = ""
+
+        save_books()
+        show_books()
+
+    # Delete a book
+    def delete_book(e):
+        index = int(e.control.data)
+
+        def confirm_delete(e):
+            books.pop(index)
+            save_books()
+            show_books()
+            page.pop_dialog()
+
+        modal_dialog = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Please confirm"),
+            content=ft.Text("Do you really want to delete this book?"),
+            actions=[
+                ft.TextButton("Yes", on_click=confirm_delete),
+                ft.TextButton("No", on_click=lambda e: page.pop_dialog()),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+            on_dismiss=lambda e: print("Modal dialog dismissed!"),
+        )
+
+        page.show_dialog(modal_dialog)
+
     ## Todo Functions
     # Display todos
     def show_todos():
         todo_list.controls.clear()
+        completed_list.controls.clear()
 
         for index, todo in enumerate(todos):
             checkbox = ft.Checkbox(
@@ -108,11 +275,12 @@ def main(page: ft.Page):
                 expand=True,
             )
 
-            delete_button = ft.IconButton(
-                icon=ft.Icons.DELETE,
-                data=index,
-                on_click=delete_todo
-            )
+            # If completed, make it grey and crossed out
+            if todo["completed"]:
+                todo_text.color = ft.Colors.GREY
+                todo_text.style = ft.TextStyle(
+                    decoration=ft.TextDecoration.LINE_THROUGH
+                )
 
             row = ft.Row(
                 controls=[
@@ -121,14 +289,19 @@ def main(page: ft.Page):
                         content=todo_text,
                         expand=True,
                     ),
-                    delete_button,
                 ],
                 width=float("inf"),
             )
 
-            todo_list.controls.append(row)
+            # Put completed tasks below the divider
+            if todo["completed"]:
+                completed_list.controls.append(row)
 
-        page.update()
+            # Put active tasks above the divider
+            else:
+                todo_list.controls.append(row)
+
+    page.update()
 
     # Add a todo
     def add_todo(e):
@@ -154,31 +327,6 @@ def main(page: ft.Page):
 
         save_todos()
         show_todos()
-
-
-    # Delete a todo
-    def delete_todo(e):
-        index = int(e.control.data)
-
-        def confirm_delete(e):
-            todos.pop(index)
-            save_todos()
-            show_todos()
-            page.pop_dialog()
-
-        modal_dialog = ft.AlertDialog(
-            modal=True,
-            title=ft.Text("Please confirm"),
-            content=ft.Text("Do you really want to delete this task?"),
-            actions=[
-                ft.TextButton("Yes", on_click=confirm_delete),
-                ft.TextButton("No", on_click=lambda e: page.pop_dialog()),
-            ],
-            actions_alignment=ft.MainAxisAlignment.END,
-            on_dismiss=lambda e: print("Modal dialog dismissed!"),
-        )
-
-        page.show_dialog(modal_dialog)
 
     # Delete completed todos
     def clear_completed(e):
@@ -295,7 +443,6 @@ def main(page: ft.Page):
                 f"{hours} hours, {minutes} minutes",
                 expand=True,
             )
-
             delete_button = ft.IconButton(
                 icon=ft.Icons.DELETE,
                 data=index,
@@ -320,6 +467,11 @@ def main(page: ft.Page):
             await asyncio.sleep(1)
 
     # Buttons
+    book_add_button = ft.IconButton(
+        icon=ft.Icons.ADD,
+        on_click=add_book
+    )
+
     todo_add_button = ft.IconButton(
         icon=ft.Icons.ADD,
         on_click=add_todo
@@ -341,6 +493,11 @@ def main(page: ft.Page):
         on_reorder=reorder_todos,
     )
 
+    completed_list = ft.Column(
+        expand=True,
+    )
+
+    book_list = ft.Column()
     counter_list = ft.Column()
 
     # Page
@@ -349,7 +506,7 @@ def main(page: ft.Page):
             expand=True,
             content=ft.Tabs(
                 selected_index=0,
-                length=3,
+                length=6,
                 expand=True,
 
                 content=ft.Column(
@@ -361,11 +518,14 @@ def main(page: ft.Page):
                             tabs=[
                                 ft.Tab(label="Tab 1", icon=ft.Icons.CHECKLIST),
                                 ft.Tab(label="Tab 2", icon=ft.Icons.ACCESS_ALARM),
-                                ft.Tab(
-                                    label=ft.CircleAvatar(
-                                        foreground_image_src="https://avatars.githubusercontent.com/u/102273996?s=200&amp;v=4",
+                                ft.Tab(label="Tab 3", icon=ft.Icons.BOOK),
+                                ft.Tab(label="Tab 4", icon=ft.Image(src="assets/film.png",
+                                        width=24,
+                                        height=24,
                                     ),
                                 ),
+                                ft.Tab(label="Tab 5", icon=ft.Icons.ADD_TO_QUEUE),
+                                ft.Tab(label="Tab 6", icon=ft.Icons.ALL_INCLUSIVE),
                             ]
                         ),
 
@@ -399,8 +559,13 @@ def main(page: ft.Page):
                                                     todo_add_button
                                                 ]
                                             ),
-
+                                            # Active Tasks
                                             todo_list,
+                                            # Divider between active and completed
+                                            ft.Divider(),
+
+                                            # Completed tasks
+                                            completed_list,
                                             ft.Divider(),
                                             clear_button,
                                         ],
@@ -438,7 +603,82 @@ def main(page: ft.Page):
                                 # Tab 3
                                 ft.Container(
                                     alignment=ft.Alignment.CENTER,
-                                    content=ft.Text("This is Tab 3"),
+                                    content=ft.Column(
+                                        horizontal_alignment=
+                                        ft.CrossAxisAlignment.CENTER,
+                                        controls=[
+                                            ft.Text(
+                                                "Finished Book List",
+                                                size=32,
+                                                weight=ft.FontWeight.BOLD
+                                            ),
+                                            ft.Row(
+                                                controls=[
+                                                    book_input,
+                                                    book_add_button
+                                                ]
+                                            ),
+                                            book_list,
+                                        ],
+                                    ),
+                                ),
+                                # Tab 4
+                                ft.Container(
+                                    bgcolor="yellow",
+                                    alignment=ft.Alignment.CENTER,
+                                    content=ft.Column(
+                                        horizontal_alignment=
+                                        ft.CrossAxisAlignment.CENTER,
+                                        controls=[
+                                            ft.Text(
+                                                "This is tab 4",
+                                                size=32,
+                                                weight=ft.FontWeight.BOLD
+                                            ),
+                                            anchor,
+                                        ],
+                                    ),
+                                ),
+                                # Tab 5
+                                ft.Container(
+                                    bgcolor="red",
+                                    alignment=ft.Alignment.CENTER,
+
+                                    content=ft.Column(
+
+                                        horizontal_alignment=
+                                        ft.CrossAxisAlignment.CENTER,
+
+                                        controls=[
+
+                                            ft.Text(
+                                                "This is tab 5",
+                                                size=32,
+                                                weight=ft.FontWeight.BOLD
+                                            ),
+                                            r,
+                                        ],
+                                    ),
+                                ),
+                                # Tab 6
+                                ft.Container(
+                                    bgcolor="purple",
+                                    alignment=ft.Alignment.CENTER,
+
+                                    content=ft.Column(
+
+                                        horizontal_alignment=
+                                        ft.CrossAxisAlignment.CENTER,
+
+                                        controls=[
+
+                                            ft.Text(
+                                                "This is tab 6",
+                                                size=32,
+                                                weight=ft.FontWeight.BOLD
+                                            ),
+                                        ],
+                                    ),
                                 ),
                             ],
                         ),
@@ -450,9 +690,11 @@ def main(page: ft.Page):
     # Show saved data when app starts
     show_todos()
     show_counters()
+    show_books()
 
     # Start counter refresh
     page.run_task(update_counters)
+    page.run_task(update_books)
 
 if __name__ == "__main__":
     ft.run(main)
