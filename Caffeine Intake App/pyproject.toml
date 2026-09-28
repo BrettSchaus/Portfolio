@@ -1,0 +1,7 @@
+[project]
+name = "caffeine-intake"
+version = "1.0.0"
+description = "Caffeine Intake Tracker"
+
+[tool.flet]
+product = "Caffeine Intake"
