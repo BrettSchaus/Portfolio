@@ -10,19 +10,11 @@ BOOKS_FILE = "books.json"
 
 os.environ["FLET_WS_MAX_MESSAGE_SIZE"] = "8000000"  # For tab 5 grid view
 
-# For search bar tab 4
-colors = [
-    "Amber",
-    "Blue Grey",
-    "Brown",
-    "Deep Orange",
-    "Green",
-    "Light Blue",
-    "Orange",
-    "Red",
-]
-
 def main(page: ft.Page):
+
+    books = []
+    saved_date = None
+
     ### Test for tab 5 - grid view
     r = ft.Row(wrap=True, scroll="always", expand=True)
 
@@ -40,14 +32,20 @@ def main(page: ft.Page):
         )
 
     ### Test for search bar in tab 4
-    def build_tiles(items: list[str]) -> list[ft.Control]:
+
+    def build_tiles(items):
         return [
             ft.ListTile(
-                title=ft.Text(item),
-                data=item,
+                title=ft.Text(book["text"]),
+                subtitle=ft.Text(
+                    datetime.datetime.fromisoformat(
+                        book["finished_date"]
+                    ).strftime("%d/%m/%Y")
+                ),
+                data=book,
                 on_click=handle_tile_click,
             )
-            for item in items
+            for book in items
         ]
 
     async def handle_tile_click(e: ft.Event[ft.ListTile]):
@@ -55,9 +53,17 @@ def main(page: ft.Page):
 
     async def handle_change_search(e: ft.Event[ft.SearchBar]):
         query = e.control.value.strip().lower()
+
         matching = (
-            [color for color in colors if query in color.lower()] if query else colors
+            [
+                book
+                for book in books
+                if query in book["text"].lower()
+            ]
+            if query
+            else books
         )
+
         anchor.controls = build_tiles(matching)
 
     def handle_submit(e: ft.Event[ft.SearchBar]):
@@ -69,12 +75,12 @@ def main(page: ft.Page):
     anchor = ft.SearchBar(
         view_elevation=4,
         divider_color=ft.Colors.AMBER,
-        bar_hint_text="Search colors...",
-        view_hint_text="Choose a color from the suggestions...",
+        bar_hint_text="Search books...",
+        view_hint_text="Search for a book...",
         on_change=handle_change_search,
         on_submit=handle_submit,
         on_tap=handle_tap,
-        controls=build_tiles(colors),
+        controls=build_tiles(books),
     )
 
     ### Begin without search bar
@@ -108,9 +114,6 @@ def main(page: ft.Page):
         with open(COUNTER_FILE, "w") as file:
             json.dump(counters, file)
 
-    books = []
-    saved_date = None
-
     # Load saved books
     if os.path.exists(BOOKS_FILE):
         with open(BOOKS_FILE, "r") as file:
@@ -125,6 +128,7 @@ def main(page: ft.Page):
     todo_input = ft.TextField(
         label="What do you need to do?",
         expand=True,
+        capitalization=ft.TextCapitalization.SENTENCES,
         on_submit=lambda e: add_todo(e)
     )
 
@@ -132,11 +136,13 @@ def main(page: ft.Page):
     book_input = ft.TextField(
         label="Which book have you finished reading?",
         expand=True,
+        capitalization=ft.TextCapitalization.SENTENCES,
         on_submit=lambda e: add_book(e)
     )
     # Counter Input
     counter_input = ft.TextField(
         label="Create a counter",
+        capitalization=ft.TextCapitalization.SENTENCES,
         width=300,
     )
 
@@ -429,6 +435,9 @@ def main(page: ft.Page):
             years = total_seconds // (365 * 24 * 60 * 60)
             remaining = total_seconds % (365 * 24 * 60 * 60)
 
+            months = remaining // (30 * 24 * 60 * 60)
+            remaining %= (30 * 24 * 60 * 60)
+
             days = remaining // (24 * 60 * 60)
             remaining %= (24 * 60 * 60)
 
@@ -438,9 +447,9 @@ def main(page: ft.Page):
             minutes = remaining // 60
 
             counter_text = ft.Text(
-                f"{counter['text']} - Started: {date_text} - "
-                f"Time since: {years} years, {days} days, "
-                f"{hours} hours, {minutes} minutes",
+                f"{counter['text']} - {date_text} - "
+                f"Time since: {years} years, {months} months, "
+                f"{days} days, {hours} hours, {minutes} minutes",
                 expand=True,
             )
             delete_button = ft.IconButton(
@@ -537,16 +546,11 @@ def main(page: ft.Page):
 
                                 # Tab 1
                                 ft.Container(
-
                                     alignment=ft.Alignment.CENTER,
-
                                     content=ft.Column(
-
                                         horizontal_alignment=
                                         ft.CrossAxisAlignment.CENTER,
-
                                         controls=[
-
                                             ft.Text(
                                                 "To Do List",
                                                 size=32,
