@@ -49,7 +49,7 @@ def main(page: ft.Page):
         ]
 
     async def handle_tile_click(e: ft.Event[ft.ListTile]):
-        await anchor.close_view()
+        await search_bar.close_view()
 
     async def handle_change_search(e: ft.Event[ft.SearchBar]):
         query = e.control.value.strip().lower()
@@ -64,15 +64,15 @@ def main(page: ft.Page):
             else books
         )
 
-        anchor.controls = build_tiles(matching)
+        search_bar.controls = build_tiles(matching)
 
     def handle_submit(e: ft.Event[ft.SearchBar]):
         print(f"Submit: {e.data}")
 
     async def handle_tap(e: ft.Event[ft.SearchBar]):
-        await anchor.open_view()
+        await search_bar.open_view()
 
-    anchor = ft.SearchBar(
+    search_bar = ft.SearchBar(
         view_elevation=4,
         divider_color=ft.Colors.AMBER,
         bar_hint_text="Search books...",
@@ -80,8 +80,23 @@ def main(page: ft.Page):
         on_change=handle_change_search,
         on_submit=handle_submit,
         on_tap=handle_tap,
-        controls=build_tiles(books),
+        controls=[],
+        visible=False,
     )
+
+    search_button = ft.IconButton(
+        icon=ft.Icons.SEARCH,
+        tooltip="Search books",
+    )
+
+    def open_search(e):
+        search_button.visible = False
+        search_bar.visible = True
+        search_bar.controls = build_tiles(books)
+        search_bar.focus()
+        page.update()
+
+    search_button.on_click = open_search
 
     ### Begin without search bar
     today = datetime.datetime.now()
@@ -102,6 +117,7 @@ def main(page: ft.Page):
     counters = []
     selected_date = None
     selected_time = None
+    expanded_counters = set()
 
     # Load saved counters
     if os.path.exists(COUNTER_FILE):
@@ -281,7 +297,7 @@ def main(page: ft.Page):
                 expand=True,
             )
 
-            # If completed, make it grey and crossed out
+            # If completed, make it greyed and crossed out
             if todo["completed"]:
                 todo_text.color = ft.Colors.GREY
                 todo_text.style = ft.TextStyle(
@@ -296,7 +312,6 @@ def main(page: ft.Page):
                         expand=True,
                     ),
                 ],
-                width=float("inf"),
             )
 
             # Put completed tasks below the divider
@@ -307,7 +322,10 @@ def main(page: ft.Page):
             else:
                 todo_list.controls.append(row)
 
-    page.update()
+        # Only show divider when there are completed tasks
+        todo_divider.visible = len(completed_list.controls) > 0
+
+        page.update()
 
     # Add a todo
     def add_todo(e):
@@ -446,26 +464,51 @@ def main(page: ft.Page):
 
             minutes = remaining // 60
 
-            counter_text = ft.Text(
-                f"{counter['text']} - {date_text} - "
-                f"Time since: {years} years, {months} months, "
-                f"{days} days, {hours} hours, {minutes} minutes",
-                expand=True,
+            expanded = index in expanded_counters
+
+            if expanded:
+                subtitle = (
+                    f"Started: {date_text}\n"
+                    f"Time since: {years} years, {months} months, "
+                    f"{days} days, {hours} hours, {minutes} minutes"
+                )
+            else:
+                subtitle = None
+
+            def toggle_counter(e, index=index):
+                if index in expanded_counters:
+                    expanded_counters.remove(index)
+                else:
+                    expanded_counters.add(index)
+
+                show_counters()
+
+            counter_tile = ft.ListTile(
+                title=ft.Text(
+                    counter["text"],
+                    size=18,
+                    weight=ft.FontWeight.BOLD,
+                ),
+                subtitle=ft.Text(subtitle) if subtitle else None,
+                on_click=toggle_counter,
             )
+
             delete_button = ft.IconButton(
                 icon=ft.Icons.DELETE,
                 data=index,
-                on_click=delete_counter
+                on_click=delete_counter,
             )
+
             row = ft.Row(
                 controls=[
                     ft.Container(
-                        content=counter_text,
+                        content=counter_tile,
                         expand=True,
                     ),
                     delete_button,
                 ],
             )
+
             counter_list.controls.append(row)
 
         page.update()
@@ -502,9 +545,9 @@ def main(page: ft.Page):
         on_reorder=reorder_todos,
     )
 
-    completed_list = ft.Column(
-        expand=True,
-    )
+    completed_list = ft.Column()
+
+    todo_divider = ft.Divider(visible=False)
 
     book_list = ft.Column()
     counter_list = ft.Column()
@@ -546,31 +589,28 @@ def main(page: ft.Page):
 
                                 # Tab 1
                                 ft.Container(
-                                    alignment=ft.Alignment.CENTER,
+                                    padding=20,
                                     content=ft.Column(
-                                        horizontal_alignment=
-                                        ft.CrossAxisAlignment.CENTER,
+                                        expand=True,
                                         controls=[
                                             ft.Text(
                                                 "To Do List",
                                                 size=32,
-                                                weight=ft.FontWeight.BOLD
+                                                weight=ft.FontWeight.BOLD,
                                             ),
 
                                             ft.Row(
                                                 controls=[
                                                     todo_input,
-                                                    todo_add_button
-                                                ]
+                                                    todo_add_button,
+                                                ],
                                             ),
-                                            # Active Tasks
+                                            # Active tasks
                                             todo_list,
-                                            # Divider between active and completed
-                                            ft.Divider(),
-
+                                            # Only visible when completed tasks exist
+                                            todo_divider,
                                             # Completed tasks
                                             completed_list,
-                                            ft.Divider(),
                                             clear_button,
                                         ],
                                     ),
@@ -639,7 +679,14 @@ def main(page: ft.Page):
                                                 size=32,
                                                 weight=ft.FontWeight.BOLD
                                             ),
-                                            anchor,
+
+                                            ft.Row(
+                                                controls=[
+                                                    search_button,
+                                                    search_bar,
+                                                ],
+                                                alignment=ft.MainAxisAlignment.CENTER,
+                                            ),
                                         ],
                                     ),
                                 ),
