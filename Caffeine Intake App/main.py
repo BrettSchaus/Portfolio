@@ -51,25 +51,26 @@ def main(page: ft.Page):
 
     percentage_text = ft.Text(
         "0%",
-        size=18,
+        size=24,
         weight=ft.FontWeight.BOLD,
     )
 
     progress_ring = ft.ProgressRing(
         value=0,
-        width=120,
-        height=120,
+        width=160,
+        height=160,
+        stroke_width=16,
     )
 
     progress_stack = ft.Stack(
-        width=120,
-        height=120,
+        width=160,
+        height=160,
         controls=[
             ft.Container(
                 content=percentage_text,
                 alignment=ft.Alignment.CENTER,
-                width=120,
-                height=120,
+                width=160,
+                height=160,
             ),
             progress_ring,
         ],
@@ -85,18 +86,20 @@ def main(page: ft.Page):
         label="What did you drink?",
         hint_text="e.g. Coffee",
         expand=True,
+        width=160,
     )
 
     caffeine_amount_input = ft.TextField(
         label="Caffeine",
         hint_text="mg",
-        width=120,
+        width=90,  # Width of caffeine textfield
         keyboard_type=ft.KeyboardType.NUMBER,
+        text_style=ft.TextStyle(size=14),
+        label_style=ft.TextStyle(size=12),
     )
 
     # History page
     history_list = ft.Column(
-        expand=True,
         scroll=ft.ScrollMode.AUTO,
     )
 
@@ -145,12 +148,11 @@ def main(page: ft.Page):
             f"Daily limit: {daily_limit} mg"
         )
 
-    # Display history
+    # Display history grouped by day
     def show_history():
         history_list.controls.clear()
 
         if not caffeine_intakes:
-
             history_list.controls.append(
                 ft.Container(
                     content=ft.Text(
@@ -160,29 +162,75 @@ def main(page: ft.Page):
                     padding=20,
                 )
             )
+            return
 
-        else:
+        # Group valid entries by date
+        grouped_intakes = {}
 
-            # Newest entries first
-            for index in reversed(
-                range(len(caffeine_intakes))
+        for index, intake in enumerate(caffeine_intakes):
+            try:
+                intake_time = datetime.datetime.fromisoformat(
+                    intake["timestamp"]
+                )
+
+                date_key = intake_time.date()
+
+                if date_key not in grouped_intakes:
+                    grouped_intakes[date_key] = []
+
+                grouped_intakes[date_key].append(
+                    (index, intake, intake_time)
+                )
+
+            except (KeyError, ValueError, TypeError):
+                continue
+
+        # Newest day first
+        for date_key in sorted(
+                grouped_intakes.keys(),
+                reverse=True
+        ):
+
+            # Date title
+            if date_key == datetime.date.today():
+                date_title = "Today"
+            elif date_key == (
+                    datetime.date.today() - datetime.timedelta(days=1)
             ):
+                date_title = "Yesterday"
+            else:
+                date_title = date_key.strftime("%A, %d/%m/%Y")
 
-                intake = caffeine_intakes[index]
+            # Date heading
+            history_list.controls.append(
+                ft.Container(
+                    content=ft.Text(
+                        date_title,
+                        size=20,
+                        weight=ft.FontWeight.BOLD,
+                    ),
+                    padding=ft.Padding.only(top=15),
+                )
+            )
 
-                try:
-                    intake_time = (
-                        datetime.datetime.fromisoformat(
-                            intake["timestamp"]
-                        )
-                    )
-                except (KeyError, ValueError):
-                    continue
+            history_list.controls.append(
+                ft.Divider()
+            )
 
+            # Calculate daily total
+            daily_total = sum(
+                intake["amount_mg"]
+                for _, intake, _ in grouped_intakes[date_key]
+            )
+
+            # Entries for this day, newest first
+            for index, intake, intake_time in reversed(
+                    grouped_intakes[date_key]
+            ):
                 caffeine_text = ft.Text(
                     f'{intake["drink"]} — '
                     f'{intake["amount_mg"]} mg\n'
-                    f'{intake_time.strftime("%d/%m/%Y %H:%M")}',
+                    f'{intake_time.strftime("%H:%M")}',
                     expand=True,
                 )
 
@@ -202,6 +250,22 @@ def main(page: ft.Page):
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                     )
                 )
+
+            # Daily total
+            history_list.controls.append(
+                ft.Container(
+                    content=ft.Text(
+                        f"Daily total: {daily_total} mg",
+                        size=16,
+                        weight=ft.FontWeight.BOLD,
+                    ),
+                    alignment=ft.Alignment.CENTER_RIGHT,
+                    padding=ft.Padding.only(
+                        top=8,
+                        bottom=15,
+                    ),
+                )
+            )
 
     # Delete entries
     def delete_caffeine_intake(e):
@@ -269,6 +333,21 @@ def main(page: ft.Page):
 
         page.update()
 
+    def quick_add_decaf():
+        caffeine_intakes.append(
+            {
+                "drink": "Decaf",
+                "amount_mg": 7,
+                "timestamp": (datetime.datetime.now().isoformat()),
+            }
+        )
+        save_data()
+
+        update_home()
+        show_history()
+
+        page.update()
+
     # Daily limit in setting page
     limit_input = ft.TextField(
         label="Daily caffeine limit",
@@ -294,7 +373,7 @@ def main(page: ft.Page):
             save_data()
             update_home()
 
-            limit_dialog.open = False
+            page.pop_dialog()
 
             page.update()
 
@@ -302,14 +381,12 @@ def main(page: ft.Page):
             return
 
     limit_dialog = ft.AlertDialog(
-        title=ft.Text(
-            "Set Daily Caffeine Limit"
-        ),
+        title=ft.Text("Set Daily Caffeine Limit"),
         content=limit_input,
         actions=[
             ft.TextButton(
                 "Cancel",
-                on_click=close_limit_dialog,
+                on_click=lambda e: page.pop_dialog(),
             ),
             ft.TextButton(
                 "Save",
@@ -321,9 +398,7 @@ def main(page: ft.Page):
     def open_limit_dialog(e):
         limit_input.value = str(daily_limit)
 
-        limit_dialog.open = True
-
-        page.update()
+        page.show_dialog(limit_dialog)
 
     # Add new caffeine intake button
     caffeine_intake_add_button = ft.IconButton(
@@ -335,6 +410,7 @@ def main(page: ft.Page):
     # Home view
     home_view = ft.Column(
         expand=True,
+        scroll=ft.ScrollMode.AUTO,
         controls=[
             ft.Text(
                 "Caffeine Tracker",
@@ -355,16 +431,6 @@ def main(page: ft.Page):
                 alignment=ft.Alignment.CENTER,
             ),
 
-            ft.Container(
-                content=ft.Button(
-                    "Set Daily Limit",
-                    icon=ft.Icons.SETTINGS,
-                    on_click=open_limit_dialog,
-                ),
-                alignment=ft.Alignment.CENTER,
-                padding=10,
-            ),
-
             ft.Divider(),
 
             ft.Text(
@@ -379,13 +445,46 @@ def main(page: ft.Page):
                     caffeine_amount_input,
                     caffeine_intake_add_button,
                 ],
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
             ),
-            ft.IconButton(
-                icon=ft.Icons.ADD_CIRCLE,
-                on_click=quick_add,
-                icon_color=ft.Colors.INDIGO,
-                icon_size=70,
-            ),
+            ft.Row(
+                alignment=ft.MainAxisAlignment.CENTER,
+                spacing=30,
+                controls=[
+                    ft.Column(
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=0,
+                        controls=[
+                            ft.IconButton(
+                                icon=ft.Icons.ADD_CIRCLE,
+                                on_click=quick_add,
+                                icon_color=ft.Colors.INDIGO,
+                                icon_size=70,
+                            ),
+                            ft.Text(
+                                "Espresso • Quick Add",
+                                size=13,
+                            ),
+                        ],
+                    ),
+                    ft.Column(
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=0,
+                        controls=[
+                            ft.IconButton(
+                                icon=ft.Icons.ADD_CIRCLE,
+                                on_click=quick_add_decaf,
+                                icon_color=ft.Colors.INDIGO,
+                                icon_size=70,
+                            ),
+                            ft.Text(
+                                "Decaf • Quick Add",
+                                size=13,
+                            ),
+                        ],
+                    ),
+                ],
+            )
         ],
     )
 
@@ -494,7 +593,6 @@ def main(page: ft.Page):
 
     # Initial update
     update_home()
-    show_history()
 
 
 if __name__ == "__main__":

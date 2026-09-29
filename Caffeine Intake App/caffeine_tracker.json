@@ -1,4 +1,35 @@
 {
     "daily_limit": 200,
-    "caffeine_intakes": []
+    "caffeine_intakes": [
+        {
+            "drink": "Espresso",
+            "amount_mg": 60,
+            "timestamp": "2026-09-29T21:11:58.398169"
+        },
+        {
+            "drink": "Decaf",
+            "amount_mg": 7,
+            "timestamp": "2026-09-29T21:11:58.810274"
+        },
+        {
+            "drink": "Decaf",
+            "amount_mg": 7,
+            "timestamp": "2026-09-29T21:11:59.184209"
+        },
+        {
+            "drink": "Espresso",
+            "amount_mg": 60,
+            "timestamp": "2026-09-29T21:11:59.839163"
+        },
+        {
+            "drink": "Espresso",
+            "amount_mg": 60,
+            "timestamp": "2026-09-29T21:12:00.140917"
+        },
+        {
+            "drink": "drink asdut",
+            "amount_mg": 123,
+            "timestamp": "2026-09-29T21:12:06.171335"
+        }
+    ]
 }
