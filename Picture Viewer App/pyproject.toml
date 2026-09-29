@@ -1,0 +1,19 @@
+[project]
+name = "picture-viewer"
+version = "1.0.0"
+description = "Android picture viewer"
+requires-python = ">=3.14"
+dependencies = [
+    "flet==1.0.1",
+    "flet-permission-handler",
+    "Pillow",
+]
+
+[tool.flet]
+product = "Picture Viewer"
+org = "com.brettschaus"
+description = "A simple picture viewer for Android"
+
+[tool.flet.android.permission]
+"android.permission.READ_MEDIA_IMAGES" = true
+"android.permission.READ_EXTERNAL_STORAGE" = { maxSdkVersion = "32" }
